@@ -2,373 +2,449 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <title>NexChat</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-secondary:#2b2d31; --bg-tertiary:#1e1f22; --bg-sidebar:#2b2d31;
-  --bg-chat:#313338; --bg-input:#383a40; --bg-hover:#35373c; --bg-active:#404249;
-  --text-primary:#f2f3f5; --text-secondary:#b5bac1; --text-muted:#80848e;
-  --accent:#5865f2; --accent-hover:#4752c4; --accent-light:#7289da;
-  --online:#23a55a; --danger:#ed4245; --scrollbar:#202225;
-  --bubble-left:#383a40; --bubble-right:#5865f2;
+/* ── RESET & ROOT ── */
+:root{
+  --bg2:#2b2d31;--bg3:#1e1f22;--bgs:#2b2d31;
+  --bgc:#313338;--bgi:#383a40;--bgh:#35373c;--bga:#404249;
+  --tp:#f2f3f5;--ts:#b5bac1;--tm:#80848e;
+  --ac:#5865f2;--ach:#4752c4;--acl:#7289da;
+  --on:#23a55a;--da:#ed4245;--sc:#202225;
+  --bl:#383a40;--br:#5865f2;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--text-primary);height:100vh;overflow:hidden;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{
+  font-family:'Nunito',sans-serif;background:var(--bg3);color:var(--tp);
+  height:100%;width:100%;overflow:hidden;
+  /* Prevent iOS bounce scroll */
+  position:fixed;
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+/* Prevent zoom on all inputs — font-size MUST be ≥16px on iOS */
+input,textarea,select{
+  font-size:16px !important;
+  font-family:'Nunito',sans-serif;
+}
 
 /* ── LOGIN ── */
 #loginPage{
-  display:flex;align-items:center;justify-content:center;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  height:100%;width:100%;
   background:linear-gradient(135deg,#1e1f22 0%,#313338 40%,#1a1b2e 100%);
   position:relative;overflow:hidden;
+  padding:16px;
+  padding-top:calc(16px + var(--safe-top));
+  padding-bottom:calc(16px + var(--safe-bot));
 }
-#loginPage::before{content:'';position:absolute;width:600px;height:600px;
+#loginPage::before{content:'';position:absolute;width:500px;height:500px;
   background:radial-gradient(circle,rgba(88,101,242,.15) 0%,transparent 70%);
   top:-100px;left:-100px;animation:pBg 4s ease-in-out infinite;}
-#loginPage::after{content:'';position:absolute;width:400px;height:400px;
+#loginPage::after{content:'';position:absolute;width:350px;height:350px;
   background:radial-gradient(circle,rgba(114,137,218,.1) 0%,transparent 70%);
   bottom:-50px;right:-50px;animation:pBg 4s ease-in-out infinite 2s;}
-@keyframes pBg{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
-.login-card{
-  background:var(--bg-secondary);border-radius:18px;padding:44px 40px;width:460px;
-  text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.6);
-  position:relative;z-index:1;animation:sUp .6s cubic-bezier(.34,1.56,.64,1);
+@keyframes pBg{0%,100%{transform:scale(1)}50%{transform:scale(1.1);opacity:.7}}
+
+.lcard{
+  background:var(--bg2);border-radius:20px;
+  padding:36px 28px;width:100%;max-width:420px;
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);
+  position:relative;z-index:1;
+  animation:sUp .5s cubic-bezier(.34,1.56,.64,1);
 }
-@keyframes sUp{from{opacity:0;transform:translateY(40px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-.login-logo{
-  width:72px;height:72px;background:var(--accent);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
-  font-size:32px;box-shadow:0 8px 24px rgba(88,101,242,.4);animation:float 3s ease-in-out infinite;
+@keyframes sUp{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+.llogo{
+  width:64px;height:64px;background:var(--ac);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;font-size:28px;
+  box-shadow:0 8px 20px rgba(88,101,242,.4);
+  animation:fl 3s ease-in-out infinite;
 }
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.login-card h1{
-  font-size:28px;font-weight:800;margin-bottom:8px;
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.lcard h1{
+  font-size:26px;font-weight:800;margin-bottom:6px;
   background:linear-gradient(135deg,#fff,#b5bac1);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.login-card>p{color:var(--text-muted);margin-bottom:32px;font-size:15px;}
+.lcard>p{color:var(--tm);margin-bottom:28px;font-size:14px;line-height:1.5;}
 .btn-google{
-  display:flex;align-items:center;justify-content:center;gap:12px;
-  width:100%;padding:14px 24px;background:white;color:#3c4043;border:none;
-  border-radius:12px;font-size:16px;font-weight:700;font-family:'Nunito',sans-serif;
-  cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.3);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:14px 20px;background:white;color:#3c4043;border:none;
+  border-radius:12px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;
+  cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(0,0,0,.25);
+  min-height:50px;
 }
-.btn-google:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.4);}
-.btn-google:active{transform:translateY(0);}
-.login-features{display:flex;gap:10px;margin-top:28px;justify-content:center;flex-wrap:wrap;}
-.feature-tag{
+.btn-google:active{opacity:.85;transform:scale(.98);}
+.ltags{display:flex;gap:8px;margin-top:22px;justify-content:center;flex-wrap:wrap;}
+.ltag{
   background:rgba(88,101,242,.15);border:1px solid rgba(88,101,242,.3);
-  color:#7289da;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
+  color:#7289da;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;
 }
 
-/* ── APP LAYOUT ── */
-#app{display:none;height:100vh;flex-direction:row;}
+/* ── APP ── */
+#app{
+  display:none;height:100%;width:100%;flex-direction:row;
+  padding-top:var(--safe-top);
+  overflow:hidden;position:relative;
+}
 
 /* ── SIDEBAR ── */
 #sidebar{
-  width:260px;background:var(--bg-sidebar);display:flex;flex-direction:column;
-  flex-shrink:0;animation:sLeft .4s ease;border-right:1px solid rgba(255,255,255,.04);
+  width:260px;background:var(--bgs);display:flex;flex-direction:column;
+  flex-shrink:0;border-right:1px solid rgba(255,255,255,.04);
+  height:100%;overflow:hidden;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  z-index:50;
 }
-@keyframes sLeft{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-.sidebar-header{
-  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05);
-  background:rgba(0,0,0,.15);
+/* MOBILE: sidebar as slide-over drawer */
+@media(max-width:640px){
+  #sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:80%;max-width:300px;
+    transform:translateX(-100%);
+    padding-top:var(--safe-top);
+    padding-bottom:var(--safe-bot);
+    box-shadow:4px 0 24px rgba(0,0,0,.5);
+  }
+  #sidebar.open{transform:translateX(0);}
+  #sideBackdrop{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+    z-index:49;animation:fadeIn .2s ease;
+  }
+  #sideBackdrop.show{display:block;}
 }
-.sidebar-title{font-size:15px;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:8px;margin-bottom:2px;}
-.sidebar-subtitle{font-size:10px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;}
 
-/* Search bar */
-.add-user-box{padding:10px 10px 6px;}
-.search-row{display:flex;gap:6px;align-items:center;}
-.search-input{
-  flex:1;background:var(--bg-input);border:2px solid transparent;outline:none;
-  color:var(--text-primary);font-size:13px;font-family:'Nunito',sans-serif;
-  padding:8px 12px;border-radius:8px;transition:border .2s;
+/* Mobile top bar (only visible on mobile) */
+#mobileTopBar{
+  display:none;
+  background:var(--bg2);border-bottom:1px solid rgba(255,255,255,.05);
+  padding:0 12px;align-items:center;gap:10px;
+  height:48px;flex-shrink:0;
+  padding-left:calc(12px + var(--safe-left));
+  padding-right:calc(12px + var(--safe-right));
 }
-.search-input:focus{border-color:rgba(88,101,242,.5);}
-.search-input::placeholder{color:var(--text-muted);}
-.btn-find{
-  width:34px;height:34px;background:var(--accent);border:none;border-radius:8px;
+@media(max-width:640px){
+  #mobileTopBar{display:flex;}
+}
+.btn-hamburger{
+  width:36px;height:36px;background:none;border:none;cursor:pointer;
+  color:var(--tp);display:flex;align-items:center;justify-content:center;
+  border-radius:8px;flex-shrink:0;
+}
+.btn-hamburger:active{background:var(--bgh);}
+#mobileHeaderName{font-size:15px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#mobileHeaderStatus{font-size:11px;color:var(--on);}
+
+/* Sidebar header */
+.shdr{
+  padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.05);
+  background:rgba(0,0,0,.15);flex-shrink:0;
+}
+.stitle{font-size:14px;font-weight:800;color:var(--tp);display:flex;align-items:center;gap:6px;margin-bottom:1px;}
+.ssub{font-size:10px;color:var(--tm);font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+
+/* Search add */
+.sabox{padding:8px 8px 4px;flex-shrink:0;}
+.srow{display:flex;gap:6px;}
+.sinput{
+  flex:1;background:var(--bgi);border:2px solid transparent;outline:none;
+  color:var(--tp);padding:9px 12px;border-radius:8px;transition:border .2s;
+  /* font-size overridden to 16px globally to prevent iOS zoom */
+}
+.sinput:focus{border-color:rgba(88,101,242,.5);}
+.sinput::placeholder{color:var(--tm);}
+.sbtn{
+  width:36px;height:36px;background:var(--ac);border:none;border-radius:8px;
   cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:800;transition:all .2s;flex-shrink:0;
+  font-size:20px;font-weight:800;flex-shrink:0;
+  transition:background .15s;
 }
-.btn-find:hover{background:var(--accent-hover);transform:scale(1.08);}
+.sbtn:active{background:var(--ach);}
 
-/* Contacts */
-.contacts-list{flex:1;overflow-y:auto;padding:4px 0 8px;}
-.contacts-list::-webkit-scrollbar{width:4px;}
-.contacts-list::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:2px;}
+/* Contacts list */
+.clist{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 0 8px;}
+.clist::-webkit-scrollbar{display:none;}
 
-.section-label{
-  padding:12px 14px 4px;font-size:10px;font-weight:800;
-  text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);
+.slbl{
+  padding:10px 12px 4px;font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1px;color:var(--tm);
 }
 
-.contact-item{
-  display:flex;align-items:center;gap:10px;padding:8px 10px;
-  border-radius:8px;margin:1px 6px;cursor:pointer;transition:all .15s;position:relative;
-  group:hover;
+.ci{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 8px;border-radius:8px;margin:1px 6px;
+  cursor:pointer;transition:background .1s;position:relative;
+  min-height:52px;
 }
-.contact-item:hover{background:var(--bg-hover);}
-.contact-item:hover .btn-del{opacity:1;}
-.contact-item.active{background:var(--bg-active);}
+.ci:active,.ci.act{background:var(--bga);}
+@media(hover:hover){.ci:hover{background:var(--bgh);} .ci:hover .bdel{opacity:1;}}
+/* On touch — always show delete */
+@media(hover:none){.bdel{opacity:1 !important;}}
 
-.c-avatar{
-  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+.cav{
+  width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
   justify-content:center;font-weight:800;font-size:15px;color:white;
-  flex-shrink:0;position:relative;transition:transform .15s;
+  flex-shrink:0;position:relative;
 }
-.contact-item:hover .c-avatar{transform:scale(1.06);}
-.status-dot{
-  position:absolute;bottom:0;right:0;width:13px;height:13px;
-  border-radius:50%;border:2.5px solid var(--bg-sidebar);
-  background:var(--text-muted);transition:background .3s;
+.sdot{
+  position:absolute;bottom:0;right:0;width:12px;height:12px;
+  border-radius:50%;border:2.5px solid var(--bgs);background:var(--tm);
+  transition:background .3s;
 }
-.status-dot.online{background:var(--online);}
+.sdot.on{background:var(--on);}
 
-.c-info{flex:1;min-width:0;}
-.c-name{font-size:14px;font-weight:600;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.contact-item:hover .c-name,.contact-item.active .c-name{color:var(--text-primary);}
-.c-uid{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cinf{flex:1;min-width:0;}
+.cname{font-size:14px;font-weight:600;color:var(--ts);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci.act .cname{color:var(--tp);}
+.cuid{font-size:11px;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-.unread-badge{
-  background:var(--danger);color:white;min-width:18px;height:18px;
+.ubadge{
+  background:var(--da);color:white;min-width:18px;height:18px;
   border-radius:9px;font-size:11px;font-weight:700;padding:0 4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  animation:bpop .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes bpop{from{transform:scale(0)}to{transform:scale(1)}}
+
+.bdel{
+  width:28px;height:28px;background:rgba(237,66,69,.15);border:none;
+  border-radius:7px;cursor:pointer;color:var(--da);
   display:flex;align-items:center;justify-content:center;
-  animation:badgePop .3s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;
+  opacity:0;transition:opacity .15s;flex-shrink:0;
 }
-@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+.bdel:active{background:rgba(237,66,69,.3);}
 
-.btn-del{
-  position:absolute;right:8px;top:50%;transform:translateY(-50%);
-  width:24px;height:24px;background:rgba(237,66,69,.15);border:none;
-  border-radius:6px;cursor:pointer;color:var(--danger);
-  display:flex;align-items:center;justify-content:center;opacity:0;transition:all .15s;
-}
-.btn-del:hover{background:rgba(237,66,69,.3);}
-
-/* My profile bar */
-.profile-bar{
+/* Profile bar */
+.pbar{
   padding:10px 12px;background:rgba(0,0,0,.25);display:flex;align-items:center;
-  gap:10px;border-top:1px solid rgba(255,255,255,.05);flex-shrink:0;
+  gap:9px;border-top:1px solid rgba(255,255,255,.05);flex-shrink:0;
+  padding-bottom:calc(10px + var(--safe-bot));
 }
-.my-av{
+.myav{
   width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
   justify-content:center;font-weight:800;font-size:14px;color:white;
   flex-shrink:0;position:relative;
 }
-.my-on{
-  position:absolute;bottom:0;right:0;width:12px;height:12px;
-  border-radius:50%;border:2px solid var(--bg-sidebar);background:var(--online);
+.myon{
+  position:absolute;bottom:0;right:0;width:11px;height:11px;
+  border-radius:50%;border:2px solid var(--bgs);background:var(--on);
 }
-.my-txt{flex:1;min-width:0;}
-.my-name{font-size:13px;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.my-uid{
-  font-size:11px;color:var(--accent-light);font-weight:600;
+.mytxt{flex:1;min-width:0;}
+.myname{font-size:13px;font-weight:700;color:var(--tp);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.myuid{
+  font-size:11px;color:var(--acl);font-weight:600;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;
 }
-.my-uid:hover{text-decoration:underline;}
-.btn-out{
-  width:32px;height:32px;background:none;border:none;cursor:pointer;
-  color:var(--text-muted);border-radius:6px;display:flex;align-items:center;
-  justify-content:center;transition:all .15s;flex-shrink:0;
+.bout{
+  width:34px;height:34px;background:none;border:none;cursor:pointer;
+  color:var(--tm);border-radius:6px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;
 }
-.btn-out:hover{background:rgba(237,66,69,.15);color:var(--danger);}
+.bout:active{background:rgba(237,66,69,.2);color:var(--da);}
 
-/* ── CHAT AREA ── */
-#chatArea{flex:1;display:flex;flex-direction:column;background:var(--bg-chat);overflow:hidden;}
-
-.chat-header{
-  padding:12px 18px;background:var(--bg-chat);border-bottom:1px solid rgba(255,255,255,.05);
-  display:flex;align-items:center;gap:12px;min-height:54px;flex-shrink:0;
-  box-shadow:0 2px 10px rgba(0,0,0,.2);
+/* ── CHAT COLUMN ── */
+#chatCol{
+  flex:1;display:flex;flex-direction:column;background:var(--bgc);
+  overflow:hidden;height:100%;
+  /* On mobile, full width when sidebar hidden */
 }
-.ch-av{
-  width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-weight:800;font-size:15px;color:white;
+@media(max-width:640px){
+  #chatCol{width:100%;}
+}
+
+/* Chat header (desktop only — mobile uses mobileTopBar) */
+.chdr{
+  padding:10px 16px;background:var(--bgc);border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+@media(max-width:640px){.chdr{display:none;}}
+
+.chav{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:14px;color:white;
   flex-shrink:0;position:relative;
 }
-.ch-ring{
-  position:absolute;bottom:0;right:0;width:13px;height:13px;
-  border-radius:50%;border:2.5px solid var(--bg-chat);
-  background:var(--text-muted);transition:background .3s;
+.chring{
+  position:absolute;bottom:0;right:0;width:12px;height:12px;
+  border-radius:50%;border:2px solid var(--bgc);background:var(--tm);transition:background .3s;
 }
-.ch-ring.online{background:var(--online);}
-.ch-info{flex:1;}
-.ch-name{font-size:16px;font-weight:800;color:var(--text-primary);}
-.ch-meta{font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:6px;margin-top:1px;}
-.ch-uid{color:var(--accent-light);font-weight:700;}
-.ch-status{transition:color .3s;}
+.chring.on{background:var(--on);}
+.chinf{flex:1;}
+.chname{font-size:15px;font-weight:800;color:var(--tp);}
+.chmeta{font-size:11px;color:var(--tm);display:flex;align-items:center;gap:5px;margin-top:1px;}
+.chuid{color:var(--acl);font-weight:700;}
+.chstat{transition:color .3s;}
 
 /* Empty state */
-.empty-state{
+.estate{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--text-muted);gap:14px;animation:fadeIn .5s ease;
+  color:var(--tm);gap:12px;padding:20px;text-align:center;
+  animation:fadeIn .4s ease;
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.empty-state .eico{font-size:60px;animation:float 3s ease-in-out infinite;}
-.empty-state h2{font-size:20px;font-weight:800;color:var(--text-secondary);}
-.empty-state p{font-size:14px;text-align:center;max-width:300px;line-height:1.6;}
+.eico{font-size:52px;animation:fl 3s ease-in-out infinite;}
+.estate h2{font-size:18px;font-weight:800;color:var(--ts);}
+.estate p{font-size:13px;line-height:1.6;max-width:280px;}
 
-/* Messages */
-.msgs-wrap{
-  flex:1;overflow-y:auto;padding:16px 18px;
-  display:flex;flex-direction:column;scroll-behavior:smooth;
+/* Messages wrapper */
+.mwrap{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:12px 14px;display:flex;flex-direction:column;
+  scroll-behavior:smooth;
 }
-.msgs-wrap::-webkit-scrollbar{width:6px;}
-.msgs-wrap::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:3px;}
+.mwrap::-webkit-scrollbar{display:none;}
 
-.date-div{
-  display:flex;align-items:center;gap:12px;padding:8px 0;
-  color:var(--text-muted);font-size:12px;font-weight:600;
+.ddiv{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;color:var(--tm);font-size:11px;font-weight:700;
 }
-.date-div::before,.date-div::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06);}
+.ddiv::before,.ddiv::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.06);}
 
-/* ── BUBBLE ROWS ── */
-.brow{
-  display:flex;align-items:flex-end;gap:8px;
-  animation:msgIn .22s cubic-bezier(.34,1.2,.64,1);
-}
-@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* LEFT = other */
-.brow.left{flex-direction:row;margin-top:14px;}
+/* Bubble rows */
+.brow{display:flex;align-items:flex-end;gap:7px;animation:mIn .2s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.brow.left{flex-direction:row;margin-top:12px;}
 .brow.left.cont{margin-top:2px;}
 .brow.left.cont .bav{visibility:hidden;}
-
-/* RIGHT = me */
-.brow.right{flex-direction:row-reverse;margin-top:14px;}
+.brow.right{flex-direction:row-reverse;margin-top:12px;}
 .brow.right.cont{margin-top:2px;}
 .brow.right .bav{display:none;}
 
 .bav{
-  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-weight:800;font-size:13px;color:white;
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:12px;color:white;
   flex-shrink:0;margin-bottom:2px;
 }
-
-.bbody{max-width:65%;display:flex;flex-direction:column;}
+.bbody{max-width:72%;display:flex;flex-direction:column;}
+@media(max-width:640px){.bbody{max-width:82%;}}
 .brow.left .bbody{align-items:flex-start;}
 .brow.right .bbody{align-items:flex-end;}
 
 .bmeta{
-  font-size:11px;color:var(--text-muted);margin-bottom:4px;
-  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--tm);margin-bottom:3px;
+  display:flex;align-items:center;gap:5px;
 }
 .brow.right .bmeta{flex-direction:row-reverse;}
-.bsender{font-weight:700;color:var(--text-secondary);font-size:12px;}
+.bsndr{font-weight:700;color:var(--ts);font-size:11px;}
 
 .bubble{
-  padding:10px 14px;font-size:14px;line-height:1.55;word-break:break-word;
-  max-width:100%;box-shadow:0 2px 8px rgba(0,0,0,.25);
-  transition:transform .1s;position:relative;
+  padding:9px 13px;font-size:14px;line-height:1.5;
+  word-break:break-word;max-width:100%;
+  box-shadow:0 1px 6px rgba(0,0,0,.2);
 }
-.bubble:hover{transform:scale(1.01);}
+.brow.left .bubble{background:var(--bl);color:var(--tp);border-radius:4px 14px 14px 14px;}
+.brow.left.cont .bubble{border-radius:4px 14px 14px 4px;}
+.brow.right .bubble{background:var(--br);color:#fff;border-radius:14px 4px 14px 14px;}
+.brow.right.cont .bubble{border-radius:14px 4px 4px 14px;}
 
-/* Left bubble shape */
-.brow.left .bubble{
-  background:var(--bubble-left);color:var(--text-primary);
-  border-radius:4px 16px 16px 16px;
-}
-.brow.left.cont .bubble{border-radius:4px 16px 16px 4px;}
-
-/* Right bubble shape */
-.brow.right .bubble{
-  background:var(--bubble-right);color:#fff;
-  border-radius:16px 4px 16px 16px;
-}
-.brow.right.cont .bubble{border-radius:16px 4px 4px 16px;}
-
-/* Typing */
-.typing-bar{padding:4px 18px 2px;min-height:24px;flex-shrink:0;}
-.typing-ind{
-  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);
-  animation:fadeIn .2s ease;
-}
+/* Typing bar */
+.tbar{padding:3px 14px;min-height:22px;flex-shrink:0;}
+.tind{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--tm);}
 .tdots{display:flex;gap:3px;align-items:center;}
 .tdots span{
-  width:6px;height:6px;background:var(--text-muted);border-radius:50%;
+  width:5px;height:5px;background:var(--tm);border-radius:50%;
   animation:tb 1.2s ease-in-out infinite;
 }
 .tdots span:nth-child(2){animation-delay:.2s;}
 .tdots span:nth-child(3){animation-delay:.4s;}
-@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-6px);opacity:1}}
+@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-5px);opacity:1}}
 
-/* Input */
-.input-area{padding:0 16px 16px;flex-shrink:0;}
-.inp-wrap{
-  background:var(--bg-input);border-radius:12px;display:flex;
-  align-items:flex-end;padding:0 14px;gap:8px;transition:box-shadow .2s;
+/* Input area */
+.iarea{
+  padding:8px 10px;
+  padding-bottom:calc(8px + var(--safe-bot));
+  flex-shrink:0;background:var(--bgc);
+  border-top:1px solid rgba(255,255,255,.04);
 }
-.inp-wrap:focus-within{box-shadow:0 0 0 2px rgba(88,101,242,.4);}
+.iwrap{
+  background:var(--bgi);border-radius:22px;display:flex;
+  align-items:flex-end;padding:6px 8px 6px 14px;gap:6px;
+  transition:box-shadow .2s;
+}
+.iwrap:focus-within{box-shadow:0 0 0 2px rgba(88,101,242,.35);}
 #msgIn{
-  flex:1;background:none;border:none;outline:none;color:var(--text-primary);
-  font-size:14px;font-family:'Nunito',sans-serif;padding:13px 0;
-  resize:none;max-height:120px;line-height:1.5;
+  flex:1;background:none;border:none;outline:none;color:var(--tp);
+  /* 16px prevents iOS zoom */
+  padding:5px 0;resize:none;max-height:100px;line-height:1.45;
+  -webkit-user-select:text;user-select:text;
 }
-#msgIn::placeholder{color:var(--text-muted);}
-.btn-send{
-  width:36px;height:36px;background:var(--accent);border:none;border-radius:8px;
+#msgIn::placeholder{color:var(--tm);}
+.bsend{
+  width:34px;height:34px;background:var(--ac);border:none;border-radius:50%;
   cursor:pointer;color:white;display:flex;align-items:center;justify-content:center;
-  font-size:16px;transition:all .2s;margin-bottom:9px;flex-shrink:0;
+  flex-shrink:0;transition:background .15s;
 }
-.btn-send:hover{background:var(--accent-hover);transform:scale(1.06);}
-.btn-send:active{transform:scale(.94);}
-.btn-send:disabled{background:var(--bg-hover);cursor:default;transform:none;opacity:.5;}
+.bsend:active{background:var(--ach);transform:scale(.92);}
+.bsend:disabled{background:var(--bgh);opacity:.5;}
 
 /* ── MODALS ── */
-.moverlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.78);
-  display:flex;align-items:center;justify-content:center;z-index:200;
+.mov{
+  position:fixed;inset:0;background:rgba(0,0,0,.8);
+  display:flex;align-items:center;justify-content:center;z-index:300;
+  padding:16px;
+  padding-top:calc(16px + var(--safe-top));
+  padding-bottom:calc(16px + var(--safe-bot));
   animation:fadeIn .2s ease;
 }
 .mbox{
-  background:var(--bg-secondary);border-radius:16px;padding:32px;width:390px;
-  text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.6);
+  background:var(--bg2);border-radius:16px;padding:24px 20px;
+  width:100%;max-width:360px;
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);
   animation:sUp .3s cubic-bezier(.34,1.56,.64,1);
+  max-height:90vh;overflow-y:auto;
 }
-.mbox h3{font-size:19px;font-weight:800;margin-bottom:10px;}
-.mbox>p{color:var(--text-muted);margin-bottom:18px;font-size:14px;line-height:1.55;}
-.minput{
-  width:100%;background:var(--bg-input);border:2px solid transparent;outline:none;
-  color:var(--text-primary);font-size:14px;font-family:'Nunito',sans-serif;
-  padding:11px 14px;border-radius:10px;margin-bottom:14px;transition:border .2s;
+.mbox h3{font-size:17px;font-weight:800;margin-bottom:8px;}
+.mbox>p{color:var(--tm);margin-bottom:16px;font-size:13px;line-height:1.5;}
+.minp{
+  width:100%;background:var(--bgi);border:2px solid transparent;outline:none;
+  color:var(--tp);padding:12px 14px;border-radius:10px;margin-bottom:12px;
+  transition:border .2s;display:block;
+  /* 16px set globally */
 }
-.minput:focus{border-color:var(--accent);}
-.minput::placeholder{color:var(--text-muted);}
-.mresult{
-  padding:12px 14px;border-radius:10px;margin-bottom:14px;text-align:left;
-  background:var(--bg-active);display:flex;align-items:center;gap:12px;
+.minp:focus{border-color:var(--ac);}
+.minp::placeholder{color:var(--tm);}
+.mres{
+  padding:10px 12px;border-radius:10px;margin-bottom:12px;text-align:left;
+  background:var(--bga);display:flex;align-items:center;gap:10px;
   animation:sUp .2s ease;
 }
-.mr-name{font-weight:700;font-size:15px;}
-.mr-uid{font-size:11px;color:var(--accent-light);margin-top:2px;}
-.mbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.mbtn{
-  padding:10px 22px;border-radius:8px;border:none;cursor:pointer;
-  font-weight:700;font-family:'Nunito',sans-serif;font-size:14px;transition:all .2s;
+.mrn{font-weight:700;font-size:14px;}
+.mru{font-size:11px;color:var(--acl);margin-top:2px;}
+.mbtns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.mb{
+  padding:11px 20px;border-radius:10px;border:none;cursor:pointer;
+  font-weight:700;font-family:'Nunito',sans-serif;font-size:14px;
+  transition:opacity .15s;min-height:44px;
 }
-.mbtn.cancel{background:var(--bg-hover);color:var(--text-primary);}
-.mbtn.cancel:hover{background:var(--bg-active);}
-.mbtn.ok{background:var(--accent);color:white;}
-.mbtn.ok:hover{background:var(--accent-hover);}
-.mbtn.red{background:var(--danger);color:white;}
-.mbtn.red:hover{background:#c0392b;}
+.mb:active{opacity:.8;}
+.mb.cn{background:var(--bgh);color:var(--tp);}
+.mb.ok{background:var(--ac);color:white;}
+.mb.rd{background:var(--da);color:white;}
 
 /* Toast */
 .toast{
-  position:fixed;bottom:24px;left:50%;
+  position:fixed;bottom:calc(24px + var(--safe-bot));left:50%;
   transform:translateX(-50%) translateY(80px);
-  background:var(--bg-active);color:var(--text-primary);
-  padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;
-  box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:999;pointer-events:none;
+  background:var(--bga);color:var(--tp);
+  padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;
+  box-shadow:0 6px 20px rgba(0,0,0,.4);z-index:999;pointer-events:none;
   transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;
 }
 .toast.show{transform:translateX(-50%) translateY(0);}
 
-/* Avatar colors */
+/* Avatar colours */
 .c0{background:#5865f2}.c1{background:#ed4245}.c2{background:#23a55a}
 .c3{background:#f0a500}.c4{background:#eb459e}.c5{background:#3ba55d}
 .c6{background:#fa7b3f}.c7{background:#9b59b6}
@@ -376,14 +452,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--t
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
+<!-- LOGIN -->
 <div id="loginPage">
-  <div class="login-card">
-    <div class="login-logo">💬</div>
+  <div class="lcard">
+    <div class="llogo">💬</div>
     <h1>NexChat</h1>
-    <p>Chat real-time dengan teman menggunakan User ID</p>
+    <p>Chat real-time dengan teman<br>menggunakan User ID</p>
     <button class="btn-google" onclick="loginGoogle()">
-      <svg width="22" height="22" viewBox="0 0 48 48">
+      <svg width="20" height="20" viewBox="0 0 48 48">
         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
         <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
@@ -391,10 +467,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--t
       </svg>
       Lanjutkan dengan Google
     </button>
-    <div class="login-features">
-      <span class="feature-tag">🔒 Aman</span>
-      <span class="feature-tag">⚡ Real-time</span>
-      <span class="feature-tag">🆔 User ID</span>
+    <div class="ltags">
+      <span class="ltag">🔒 Aman</span>
+      <span class="ltag">⚡ Real-time</span>
+      <span class="ltag">🆔 User ID</span>
     </div>
   </div>
 </div>
@@ -402,36 +478,49 @@ body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--t
 <!-- MAIN APP -->
 <div id="app">
 
+  <!-- Mobile top bar -->
+  <div id="mobileTopBar">
+    <button class="btn-hamburger" onclick="toggleSidebar()" id="burgerBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <div style="flex:1;min-width:0;">
+      <div id="mobileHeaderName" style="color:var(--tp);font-size:14px;font-weight:700;">NexChat</div>
+      <div id="mobileHeaderStatus" style="font-size:11px;color:var(--tm);"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar backdrop -->
+  <div id="sideBackdrop" onclick="closeSidebar()"></div>
+
   <!-- SIDEBAR -->
   <div id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-title">💬 NexChat</div>
-      <div class="sidebar-subtitle">Pesan Langsung</div>
+    <div class="shdr">
+      <div class="stitle">💬 NexChat</div>
+      <div class="ssub">Pesan Langsung</div>
     </div>
 
-    <div class="add-user-box">
-      <div class="search-row">
-        <input class="search-input" id="uidInput" placeholder="Masukkan User ID..." maxlength="24"
-          onkeydown="if(event.key==='Enter')triggerSearch()">
-        <button class="btn-find" onclick="triggerSearch()" title="Cari & Tambah">+</button>
+    <div class="sabox">
+      <div class="srow">
+        <input class="sinput" id="uidInput" placeholder="Masukkan User ID..." maxlength="24"
+          onkeydown="if(event.key==='Enter')triggerSearch()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button class="sbtn" onclick="triggerSearch()" title="Cari">+</button>
       </div>
     </div>
 
-    <div class="contacts-list" id="contactsList">
-      <div class="section-label">Kontak</div>
+    <div class="clist" id="contactsList">
+      <div class="slbl">Kontak</div>
     </div>
 
-    <div class="profile-bar">
-      <div class="my-av" id="myAv">
-        <div class="my-on"></div>
+    <div class="pbar">
+      <div class="myav" id="myAv"><div class="myon"></div></div>
+      <div class="mytxt">
+        <div class="myname" id="myName">—</div>
+        <div class="myuid" id="myUID" onclick="copyUID()">—</div>
       </div>
-      <div class="my-txt">
-        <div class="my-name" id="myName">—</div>
-        <div class="my-uid" id="myUID" onclick="copyUID()" title="Klik untuk salin">—</div>
-      </div>
-      <button class="btn-out" onclick="showLogout()" title="Keluar">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
+      <button class="bout" onclick="showLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
           <polyline points="16 17 21 12 16 7"/>
           <line x1="21" y1="12" x2="9" y2="12"/>
@@ -440,12 +529,18 @@ body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--t
     </div>
   </div>
 
-  <!-- CHAT AREA -->
-  <div id="chatArea">
-    <div class="empty-state">
-      <div class="eico">🔍</div>
-      <h2>Cari Teman via User ID</h2>
-      <p>Ketik User ID teman di kolom pencarian lalu tekan +<br>untuk mulai mengobrol</p>
+  <!-- CHAT COLUMN -->
+  <div id="chatCol">
+    <!-- Desktop chat header -->
+    <div id="deskHeader" class="chdr" style="display:none;"></div>
+
+    <!-- Content area -->
+    <div id="chatArea" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div class="estate">
+        <div class="eico">🔍</div>
+        <h2>Cari Teman via User ID</h2>
+        <p>Ketik User ID teman di kolom pencarian lalu tekan + untuk mulai mengobrol</p>
+      </div>
     </div>
   </div>
 
@@ -455,54 +550,54 @@ body{font-family:'Nunito',sans-serif;background:var(--bg-tertiary);color:var(--t
 <div class="toast" id="toast"></div>
 
 <!-- Search Modal -->
-<div id="searchModal" class="moverlay" style="display:none">
+<div id="searchModal" class="mov" style="display:none">
   <div class="mbox">
     <h3>🔍 Cari Pengguna</h3>
     <p>Masukkan User ID yang ingin ditambahkan</p>
-    <input class="minput" id="smInput" placeholder="Contoh: nxc_abc12345" maxlength="24"
-      oninput="resetSearch()" onkeydown="if(event.key==='Enter')doSearch()">
+    <input class="minp" id="smInput" placeholder="Contoh: nxc_abc12345" maxlength="24"
+      oninput="resetSearch()" onkeydown="if(event.key==='Enter')doSearch()"
+      autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div id="smResult"></div>
     <div class="mbtns">
-      <button class="mbtn cancel" onclick="closeSearch()">Batal</button>
-      <button class="mbtn ok" id="smAddBtn" style="display:none" onclick="addContact()">Tambah Kontak</button>
-      <button class="mbtn ok" id="smSearchBtn" onclick="doSearch()">Cari</button>
+      <button class="mb cn" onclick="closeSearch()">Batal</button>
+      <button class="mb ok" id="smAddBtn" style="display:none" onclick="addContact()">Tambah</button>
+      <button class="mb ok" onclick="doSearch()">Cari</button>
     </div>
   </div>
 </div>
 
 <!-- Remove Modal -->
-<div id="removeModal" class="moverlay" style="display:none">
+<div id="removeModal" class="mov" style="display:none">
   <div class="mbox">
     <h3>🗑️ Hapus Kontak?</h3>
-    <p id="removeText">Hapus kontak ini dari daftar kamu?</p>
+    <p id="removeText">Hapus kontak ini?</p>
     <div class="mbtns">
-      <button class="mbtn cancel" onclick="closeRemove()">Batal</button>
-      <button class="mbtn red" onclick="confirmRemove()">Hapus</button>
+      <button class="mb cn" onclick="closeRemove()">Batal</button>
+      <button class="mb rd" onclick="confirmRemove()">Hapus</button>
     </div>
   </div>
 </div>
 
 <!-- Logout Modal -->
-<div id="logoutModal" class="moverlay" style="display:none">
+<div id="logoutModal" class="mov" style="display:none">
   <div class="mbox">
-    <h3>👋 Keluar dari NexChat?</h3>
-    <p>Kamu akan terputus dan status jadi offline.</p>
+    <h3>👋 Keluar?</h3>
+    <p>Kamu akan offline dan terputus dari semua percakapan.</p>
     <div class="mbtns">
-      <button class="mbtn cancel" onclick="closeLogout()">Batal</button>
-      <button class="mbtn red" onclick="doLogout()">Keluar</button>
+      <button class="mb cn" onclick="closeLogout()">Batal</button>
+      <button class="mb rd" onclick="doLogout()">Keluar</button>
     </div>
   </div>
 </div>
 
 <script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getDatabase, ref, set, get, update, remove, push, onValue, onDisconnect }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const cfg = {
+const cfg={
   apiKey:"AIzaSyCkLgYUCO_Q5dryeGR8Xtc8VSA04W_bH34",
   authDomain:"web-login-383a4.firebaseapp.com",
   databaseURL:"https://web-login-383a4-default-rtdb.firebaseio.com",
@@ -511,418 +606,358 @@ const cfg = {
   messagingSenderId:"43262683349",
   appId:"1:43262683349:web:58c4044ff3c96cd10e9a5c"
 };
-const app  = initializeApp(cfg);
-const auth = getAuth(app);
-const db   = getDatabase(app);
+const fApp=initializeApp(cfg);
+const auth=getAuth(fApp);
+const db=getDatabase(fApp);
 
-/* ─── State ─────────────────────────────── */
-let me = null, myUID = null;
-let activeUid = null;
-let contacts = {};   // uid → {uid,name,userId}
-let online   = {};   // uid → bool
-let unread   = {};   // uid → count
-let removeUid = null, foundUser = null;
-let msgUnsub = null, typUnsub = null, typTimer = null;
+/* ── State ── */
+let me=null,myUID=null;
+let activeUid=null;
+let contacts={},online={},unread={};
+let removeUid=null,foundUser=null;
+let msgUnsub=null,typUnsub=null,typTimer=null;
 
-/* ─── Utils ─────────────────────────────── */
-const ini = n => { if(!n) return '?'; const p=n.trim().split(/\s+/); return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():p[0][0].toUpperCase(); };
-const cc  = uid => { if(!uid) return 'c0'; let n=0; for(const c of uid) n+=c.charCodeAt(0); return 'c'+(n%8); };
-const cid = (a,b) => [a,b].sort().join('_');
-const fmt = ts => { if(!ts) return ''; const d=new Date(ts); return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}); };
-const esc = s => { if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
-const mkUID = () => { const ch='abcdefghijklmnopqrstuvwxyz0123456789'; let r='nxc_'; for(let i=0;i<8;i++) r+=ch[Math.floor(Math.random()*ch.length)]; return r; };
+/* ── Helpers ── */
+const ini=n=>{if(!n)return'?';const p=n.trim().split(/\s+/);return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():p[0][0].toUpperCase();};
+const cc=uid=>{if(!uid)return'c0';let n=0;for(const c of uid)n+=c.charCodeAt(0);return'c'+(n%8);};
+const cid=(a,b)=>[a,b].sort().join('_');
+const fmt=ts=>{if(!ts)return'';const d=new Date(ts);return d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});};
+const esc=s=>{if(!s)return'';return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+const mkUID=()=>{const ch='abcdefghijklmnopqrstuvwxyz0123456789';let r='nxc_';for(let i=0;i<8;i++)r+=ch[Math.floor(Math.random()*ch.length)];return r;};
+const isMobile=()=>window.innerWidth<=640;
 
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 3000);
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-/* ─── Auth ───────────────────────────────── */
-window.loginGoogle = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch(e) { toast('Login gagal: '+e.message); }
+/* ── Sidebar mobile toggle ── */
+window.toggleSidebar=()=>{
+  const s=document.getElementById('sidebar');
+  const b=document.getElementById('sideBackdrop');
+  const open=s.classList.toggle('open');
+  b.classList.toggle('show',open);
 };
-window.showLogout  = () => { document.getElementById('logoutModal').style.display='flex'; };
-window.closeLogout = () => { document.getElementById('logoutModal').style.display='none'; };
-window.doLogout    = async () => {
+window.closeSidebar=()=>{
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sideBackdrop').classList.remove('show');
+};
+
+/* ── Auth ── */
+window.loginGoogle=async()=>{
+  try{await signInWithPopup(auth,new GoogleAuthProvider());}
+  catch(e){toast('Login gagal: '+e.message);}
+};
+window.showLogout=()=>{document.getElementById('logoutModal').style.display='flex';};
+window.closeLogout=()=>{document.getElementById('logoutModal').style.display='none';};
+window.doLogout=async()=>{
   closeLogout();
-  if(me) await remove(ref(db,'online/'+me.uid));
+  if(me)await remove(ref(db,'online/'+me.uid));
   await signOut(auth);
 };
 
-onAuthStateChanged(auth, async user => {
-  if(user) {
-    me = user;
-    // get or create userId
-    const snap = await get(ref(db,'users/'+user.uid));
-    if(snap.exists() && snap.val().userId) {
-      myUID = snap.val().userId;
-    } else {
-      myUID = mkUID();
-      await set(ref(db,'users/'+user.uid), { uid:user.uid, name:user.displayName||'User', userId:myUID });
-    }
-    await update(ref(db,'users/'+user.uid), { name:user.displayName||'User' });
-    await set(ref(db,'online/'+user.uid), true);
+onAuthStateChanged(auth,async user=>{
+  if(user){
+    me=user;
+    const snap=await get(ref(db,'users/'+user.uid));
+    if(snap.exists()&&snap.val().userId){myUID=snap.val().userId;}
+    else{myUID=mkUID();await set(ref(db,'users/'+user.uid),{uid:user.uid,name:user.displayName||'User',userId:myUID});}
+    await update(ref(db,'users/'+user.uid),{name:user.displayName||'User'});
+    await set(ref(db,'online/'+user.uid),true);
     onDisconnect(ref(db,'online/'+user.uid)).remove();
 
-    // profile bar
-    const av = document.getElementById('myAv');
-    av.textContent = ini(user.displayName||'User');
-    av.className = 'my-av '+cc(user.uid);
-    const dot = document.createElement('div'); dot.className='my-on'; av.appendChild(dot);
-    document.getElementById('myName').textContent = user.displayName||'User';
-    document.getElementById('myUID').textContent  = myUID;
+    // Profile bar
+    const av=document.getElementById('myAv');
+    av.textContent=ini(user.displayName||'User');
+    av.className='myav '+cc(user.uid);
+    const dot=document.createElement('div');dot.className='myon';av.appendChild(dot);
+    document.getElementById('myName').textContent=user.displayName||'User';
+    document.getElementById('myUID').textContent=myUID;
 
     document.getElementById('loginPage').style.display='none';
     document.getElementById('app').style.display='flex';
 
-    listenOnline();
-    listenContacts();
-    listenIncomingChats();
+    listenOnline();listenContacts();listenInbox();
   } else {
-    me=null; myUID=null;
+    me=null;myUID=null;
     document.getElementById('app').style.display='none';
     document.getElementById('loginPage').style.display='flex';
+    document.getElementById('mobileTopBar');
   }
 });
 
-/* ─── Online ─────────────────────────────── */
-function listenOnline() {
-  onValue(ref(db,'online'), snap => {
-    online = {};
-    if(snap.val()) Object.keys(snap.val()).forEach(k=>{ if(snap.val()[k]) online[k]=true; });
-    renderContacts();
-    refreshChatHeader();
+/* ── Online ── */
+function listenOnline(){
+  onValue(ref(db,'online'),snap=>{
+    online={};
+    if(snap.val())Object.keys(snap.val()).forEach(k=>{if(snap.val()[k])online[k]=true;});
+    renderContacts();refreshHeader();
   });
 }
 
-/* ─── Contacts ───────────────────────────── */
-function listenContacts() {
-  onValue(ref(db,'users/'+me.uid+'/contacts'), snap => {
-    contacts = snap.val()||{};
+/* ── Contacts ── */
+function listenContacts(){
+  onValue(ref(db,'users/'+me.uid+'/contacts'),snap=>{
+    contacts=snap.val()||{};
     renderContacts();
   });
 }
 
-/* ─── Auto-add sender to contacts ───────── */
-function listenIncomingChats() {
-  // Listen to the 'messages' node for any chatId that contains my uid
-  // We scan all chatIds that start/include my uid by listening to 'inboxIndex'
-  // Each time someone sends me a message, we auto-add them to our contacts
-  onValue(ref(db, 'inbox/' + me.uid), async snap => {
-    if (!snap.exists()) return;
-    const senders = snap.val(); // { senderUid: true }
-    for (const senderUid of Object.keys(senders)) {
-      if (contacts[senderUid]) continue; // already in contacts
-      // Fetch sender info
-      const uSnap = await get(ref(db, 'users/' + senderUid));
-      if (!uSnap.exists()) continue;
-      const u = uSnap.val();
-      // Auto-add to contacts
-      await set(ref(db, `users/${me.uid}/contacts/${senderUid}`), {
-        uid: senderUid,
-        name: u.name || 'User',
-        userId: u.userId || senderUid
-      });
-      toast(`📩 ${u.name || 'Seseorang'} mengirim pesan! Ditambahkan ke kontak.`);
+/* ── Inbox (auto-add sender) ── */
+function listenInbox(){
+  onValue(ref(db,'inbox/'+me.uid),async snap=>{
+    if(!snap.exists())return;
+    for(const senderUid of Object.keys(snap.val())){
+      if(contacts[senderUid])continue;
+      const uSnap=await get(ref(db,'users/'+senderUid));
+      if(!uSnap.exists())continue;
+      const u=uSnap.val();
+      await set(ref(db,`users/${me.uid}/contacts/${senderUid}`),{uid:senderUid,name:u.name||'User',userId:u.userId||senderUid});
+      toast(`📩 ${u.name||'Seseorang'} mengirim pesan!`);
     }
   });
 }
 
-function renderContacts() {
-  const list = document.getElementById('contactsList');
-  list.innerHTML = '<div class="section-label">Kontak</div>';
-
-  const keys = Object.keys(contacts);
-  if(!keys.length) {
-    const el = document.createElement('div');
-    el.style.cssText='padding:16px 14px;font-size:13px;color:var(--text-muted);text-align:center;line-height:1.7;';
-    el.innerHTML='Belum ada kontak.<br>Cari User ID teman kamu.';
-    list.appendChild(el); return;
+/* ── Render contacts ── */
+function renderContacts(){
+  const list=document.getElementById('contactsList');
+  list.innerHTML='<div class="slbl">Kontak</div>';
+  const keys=Object.keys(contacts);
+  if(!keys.length){
+    const el=document.createElement('div');
+    el.style.cssText='padding:16px 12px;font-size:13px;color:var(--tm);text-align:center;line-height:1.7;';
+    el.innerHTML='Belum ada kontak.<br>Cari User ID teman.';
+    list.appendChild(el);return;
   }
-
-  keys.forEach(uid => {
-    const c   = contacts[uid];
-    const isOn = !!online[uid];
-    const u   = unread[uid]||0;
-    const act = activeUid===uid;
-
-    const item = document.createElement('div');
-    item.className = 'contact-item'+(act?' active':'');
-    item.id = 'ci-'+uid;
-    item.innerHTML = `
-      <div class="c-avatar ${cc(uid)}">
-        ${ini(c.name)}
-        <div class="status-dot ${isOn?'online':''}"></div>
+  keys.forEach(uid=>{
+    const c=contacts[uid];
+    const isOn=!!online[uid];
+    const u=unread[uid]||0;
+    const act=activeUid===uid;
+    const item=document.createElement('div');
+    item.className='ci'+(act?' act':'');
+    item.id='ci-'+uid;
+    item.innerHTML=`
+      <div class="cav ${cc(uid)}">${ini(c.name)}<div class="sdot ${isOn?'on':''}"></div></div>
+      <div class="cinf">
+        <div class="cname">${esc(c.name)}</div>
+        <div class="cuid">${esc(c.userId)}</div>
       </div>
-      <div class="c-info">
-        <div class="c-name">${esc(c.name)}</div>
-        <div class="c-uid">${esc(c.userId)}</div>
-      </div>
-      ${u>0?`<div class="unread-badge">${u}</div>`:''}
-      <button class="btn-del" title="Hapus kontak"
-        onclick="askRemove(event,'${uid}','${esc(c.name)}')">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2.5" stroke-linecap="round">
+      ${u>0?`<div class="ubadge">${u}</div>`:''}
+      <button class="bdel" onclick="askRemove(event,'${uid}','${esc(c.name)}')" title="Hapus">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
           <polyline points="3 6 5 6 21 6"/>
           <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-          <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
         </svg>
       </button>`;
-    item.addEventListener('click', () => openChat(uid, c));
+    item.addEventListener('click',()=>{openChat(uid,c);if(isMobile())closeSidebar();});
     list.appendChild(item);
   });
 }
 
-/* ─── Search & Add Contact ───────────────── */
-window.triggerSearch = () => {
-  const v = document.getElementById('uidInput').value.trim();
-  document.getElementById('smInput').value = v;
+/* ── Search ── */
+window.triggerSearch=()=>{
+  const v=document.getElementById('uidInput').value.trim();
+  document.getElementById('smInput').value=v;
   document.getElementById('searchModal').style.display='flex';
   document.getElementById('smResult').innerHTML='';
   document.getElementById('smAddBtn').style.display='none';
   foundUser=null;
-  if(v) doSearch();
+  if(v)doSearch();
+  // Focus after tiny delay so keyboard opens
+  setTimeout(()=>document.getElementById('smInput').focus(),100);
 };
-
-window.resetSearch = () => {
-  document.getElementById('smResult').innerHTML='';
-  document.getElementById('smAddBtn').style.display='none';
-  foundUser=null;
-};
-
-window.doSearch = async () => {
-  const val = document.getElementById('smInput').value.trim().toLowerCase();
-  if(!val){ toast('Masukkan User ID'); return; }
-  const rd = document.getElementById('smResult');
-  rd.innerHTML='<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0">Mencari...</div>';
-  document.getElementById('smAddBtn').style.display='none';
-  foundUser=null;
-
-  const snap = await get(ref(db,'users'));
-  if(!snap.exists()){ rd.innerHTML='<div style="color:var(--danger);text-align:center;font-size:13px;padding:8px 0">Pengguna tidak ditemukan</div>'; return; }
-
+window.resetSearch=()=>{document.getElementById('smResult').innerHTML='';document.getElementById('smAddBtn').style.display='none';foundUser=null;};
+window.doSearch=async()=>{
+  const val=document.getElementById('smInput').value.trim().toLowerCase();
+  if(!val){toast('Masukkan User ID');return;}
+  const rd=document.getElementById('smResult');
+  rd.innerHTML='<div style="color:var(--tm);font-size:13px;text-align:center;padding:8px">Mencari...</div>';
+  document.getElementById('smAddBtn').style.display='none';foundUser=null;
+  const snap=await get(ref(db,'users'));
+  if(!snap.exists()){rd.innerHTML='<div style="color:var(--da);text-align:center;font-size:13px;padding:8px">Tidak ditemukan</div>';return;}
   let found=null;
-  snap.forEach(ch => {
-    const u=ch.val();
-    if(u.userId && u.userId.toLowerCase()===val && ch.key!==me.uid) found={uid:ch.key,...u};
-  });
-
-  if(!found){ rd.innerHTML='<div style="color:var(--danger);text-align:center;font-size:13px;padding:8px 0">❌ User ID tidak ditemukan</div>'; return; }
-
-  if(contacts[found.uid]){
-    rd.innerHTML=`<div class="mresult">
-      <div class="${cc(found.uid)}" style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:white;flex-shrink:0;">${ini(found.name)}</div>
-      <div><div class="mr-name">${esc(found.name)}</div><div class="mr-uid">${esc(found.userId)}</div></div>
-    </div><div style="color:var(--text-muted);font-size:12px;text-align:center;">Sudah ada di kontak</div>`;
-    return;
-  }
-
+  snap.forEach(ch=>{const u=ch.val();if(u.userId&&u.userId.toLowerCase()===val&&ch.key!==me.uid)found={uid:ch.key,...u};});
+  if(!found){rd.innerHTML='<div style="color:var(--da);text-align:center;font-size:13px;padding:8px">❌ User ID tidak ditemukan</div>';return;}
+  if(contacts[found.uid]){rd.innerHTML=`<div class="mres"><div class="${cc(found.uid)}" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:white;flex-shrink:0;">${ini(found.name)}</div><div><div class="mrn">${esc(found.name)}</div><div class="mru">${esc(found.userId)}</div></div></div><div style="color:var(--tm);font-size:12px;text-align:center;">Sudah ada di kontak</div>`;return;}
   foundUser=found;
-  rd.innerHTML=`<div class="mresult">
-    <div class="${cc(found.uid)}" style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:white;flex-shrink:0;">${ini(found.name)}</div>
-    <div><div class="mr-name">${esc(found.name)}</div><div class="mr-uid">${esc(found.userId)}</div></div>
-  </div>`;
+  rd.innerHTML=`<div class="mres"><div class="${cc(found.uid)}" style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:white;flex-shrink:0;">${ini(found.name)}</div><div><div class="mrn">${esc(found.name)}</div><div class="mru">${esc(found.userId)}</div></div></div>`;
   document.getElementById('smAddBtn').style.display='inline-flex';
 };
-
-window.addContact = async () => {
-  if(!foundUser) return;
+window.addContact=async()=>{
+  if(!foundUser)return;
   const u=foundUser;
   await set(ref(db,`users/${me.uid}/contacts/${u.uid}`),{uid:u.uid,name:u.name,userId:u.userId});
-  closeSearch();
-  document.getElementById('uidInput').value='';
+  closeSearch();document.getElementById('uidInput').value='';
   toast(`✅ ${u.name} ditambahkan!`);
   openChat(u.uid,{name:u.name,userId:u.userId});
+  if(isMobile())closeSidebar();
 };
+window.closeSearch=()=>{document.getElementById('searchModal').style.display='none';foundUser=null;};
 
-window.closeSearch = () => {
-  document.getElementById('searchModal').style.display='none';
-  foundUser=null;
-};
-
-/* ─── Remove Contact ─────────────────────── */
-window.askRemove = (e, uid, name) => {
-  e.stopPropagation();
-  removeUid=uid;
-  document.getElementById('removeText').textContent=`Hapus "${name}" dari kontak kamu?`;
+/* ── Remove ── */
+window.askRemove=(e,uid,name)=>{
+  e.stopPropagation();removeUid=uid;
+  document.getElementById('removeText').textContent=`Hapus "${name}" dari kontak?`;
   document.getElementById('removeModal').style.display='flex';
 };
-window.closeRemove  = () => { document.getElementById('removeModal').style.display='none'; removeUid=null; };
-window.confirmRemove = async () => {
-  if(!removeUid) return;
-  if(activeUid===removeUid){ activeUid=null; resetChat(); }
+window.closeRemove=()=>{document.getElementById('removeModal').style.display='none';removeUid=null;};
+window.confirmRemove=async()=>{
+  if(!removeUid)return;
+  if(activeUid===removeUid){activeUid=null;resetChat();}
   await remove(ref(db,`users/${me.uid}/contacts/${removeUid}`));
-  closeRemove(); toast('Kontak dihapus');
+  closeRemove();toast('Kontak dihapus');
 };
 
-/* ─── Copy UID ────────────────────────────── */
-window.copyUID = () => {
-  if(!myUID) return;
+/* ── Copy UID ── */
+window.copyUID=()=>{
+  if(!myUID)return;
   navigator.clipboard.writeText(myUID).then(()=>toast('✅ User ID disalin: '+myUID));
 };
 
-/* ─── Open Chat ───────────────────────────── */
-function openChat(uid, info) {
-  activeUid=uid;
-  unread[uid]=0;
-
-  document.querySelectorAll('.contact-item').forEach(el=>el.classList.remove('active'));
+/* ── Open Chat ── */
+function openChat(uid,info){
+  activeUid=uid;unread[uid]=0;
+  document.querySelectorAll('.ci').forEach(el=>el.classList.remove('act'));
   const ci=document.getElementById('ci-'+uid);
-  if(ci){ ci.classList.add('active'); const b=ci.querySelector('.unread-badge'); if(b) b.remove(); }
+  if(ci){ci.classList.add('act');const b=ci.querySelector('.ubadge');if(b)b.remove();}
 
   const isOn=!!online[uid];
+
+  // Update mobile top bar
+  document.getElementById('mobileHeaderName').textContent=info.name;
+  document.getElementById('mobileHeaderStatus').textContent=isOn?'● Online':'● Offline';
+  document.getElementById('mobileHeaderStatus').style.color=isOn?'var(--on)':'var(--tm)';
+
+  // Update desktop header
+  const dh=document.getElementById('deskHeader');
+  dh.style.display='flex';
+  dh.innerHTML=`
+    <div class="chav ${cc(uid)}">${ini(info.name)}<div class="chring ${isOn?'on':''}" id="chRing"></div></div>
+    <div class="chinf">
+      <div class="chname">${esc(info.name)}</div>
+      <div class="chmeta"><span class="chuid">${esc(info.userId)}</span><span>·</span>
+        <span class="chstat" id="chStat" style="color:${isOn?'var(--on)':'var(--tm)'}">${isOn?'● Online':'● Offline'}</span>
+      </div>
+    </div>`;
+
+  // Chat area content
   const area=document.getElementById('chatArea');
   area.innerHTML=`
-    <div class="chat-header">
-      <div class="ch-av ${cc(uid)}">
-        ${ini(info.name)}
-        <div class="ch-ring ${isOn?'online':''}" id="chRing"></div>
-      </div>
-      <div class="ch-info">
-        <div class="ch-name">${esc(info.name)}</div>
-        <div class="ch-meta">
-          <span class="ch-uid">${esc(info.userId)}</span>
-          <span>·</span>
-          <span class="ch-status" id="chStat" style="color:${isOn?'var(--online)':'var(--text-muted)'}">
-            ${isOn?'● Online':'● Offline'}
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="msgs-wrap" id="msgsWrap">
-      <div class="date-div">Percakapan dimulai</div>
-    </div>
-    <div class="typing-bar" id="typBar"></div>
-    <div class="input-area">
-      <div class="inp-wrap">
-        <textarea id="msgIn" rows="1" placeholder="Pesan ke ${esc(info.name)}..." maxlength="2000"></textarea>
-        <button class="btn-send" id="sndBtn" onclick="sendMsg()" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
-          </svg>
+    <div class="mwrap" id="msgsWrap"><div class="ddiv">Percakapan dimulai</div></div>
+    <div class="tbar" id="typBar"></div>
+    <div class="iarea">
+      <div class="iwrap">
+        <textarea id="msgIn" rows="1" placeholder="Pesan..." maxlength="2000"
+          autocomplete="off" autocorrect="off" autocapitalize="sentences"></textarea>
+        <button class="bsend" id="sndBtn" onclick="sendMsg()" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
         </button>
       </div>
     </div>`;
 
   const inp=document.getElementById('msgIn');
   const sBtn=document.getElementById('sndBtn');
-  inp.addEventListener('input', ()=>{
+  inp.addEventListener('input',()=>{
     inp.style.height='auto';
-    inp.style.height=Math.min(inp.scrollHeight,120)+'px';
+    inp.style.height=Math.min(inp.scrollHeight,100)+'px';
     sBtn.disabled=!inp.value.trim();
     handleTyping();
   });
-  inp.addEventListener('keydown', e=>{
-    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); if(inp.value.trim()) sendMsg(); }
+  inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey&&!isMobile()){
+      e.preventDefault();if(inp.value.trim())sendMsg();
+    }
   });
-  inp.focus();
 
-  if(msgUnsub) msgUnsub();
-  if(typUnsub) typUnsub();
+  if(msgUnsub)msgUnsub();
+  if(typUnsub)typUnsub();
   const chatKey=cid(me.uid,uid);
-
-  msgUnsub=onValue(ref(db,'messages/'+chatKey), snap=>{
-    renderMsgs(snap.val(), uid, info.name);
-  });
-  typUnsub=onValue(ref(db,`typing/${chatKey}/${uid}`), snap=>{
-    const bar=document.getElementById('typBar');
-    if(!bar) return;
+  msgUnsub=onValue(ref(db,'messages/'+chatKey),snap=>{renderMsgs(snap.val());});
+  typUnsub=onValue(ref(db,`typing/${chatKey}/${uid}`),snap=>{
+    const bar=document.getElementById('typBar');if(!bar)return;
     if(snap.val()){
-      bar.innerHTML=`<div class="typing-ind">
-        <div class="tdots"><span></span><span></span><span></span></div>
-        <span>${esc(info.name)} sedang mengetik...</span>
-      </div>`;
-    } else bar.innerHTML='';
+      bar.innerHTML=`<div class="tind"><div class="tdots"><span></span><span></span><span></span></div><span>${esc(info.name)} mengetik...</span></div>`;
+    }else bar.innerHTML='';
   });
 }
 
-function resetChat() {
+function resetChat(){
   if(msgUnsub){msgUnsub();msgUnsub=null;}
   if(typUnsub){typUnsub();typUnsub=null;}
+  document.getElementById('deskHeader').style.display='none';
+  document.getElementById('mobileHeaderName').textContent='NexChat';
+  document.getElementById('mobileHeaderStatus').textContent='';
   document.getElementById('chatArea').innerHTML=`
-    <div class="empty-state">
+    <div class="estate">
       <div class="eico">🔍</div>
       <h2>Cari Teman via User ID</h2>
-      <p>Ketik User ID teman di kolom pencarian lalu tekan +<br>untuk mulai mengobrol</p>
+      <p>Ketik User ID teman di kolom pencarian lalu tekan + untuk mulai mengobrol</p>
     </div>`;
 }
 
-function refreshChatHeader() {
-  if(!activeUid) return;
+function refreshHeader(){
+  if(!activeUid)return;
   const isOn=!!online[activeUid];
   const ring=document.getElementById('chRing');
   const stat=document.getElementById('chStat');
-  if(ring) ring.className='ch-ring'+(isOn?' online':'');
-  if(stat){ stat.textContent=isOn?'● Online':'● Offline'; stat.style.color=isOn?'var(--online)':'var(--text-muted)'; }
+  if(ring)ring.className='chring'+(isOn?' on':'');
+  if(stat){stat.textContent=isOn?'● Online':'● Offline';stat.style.color=isOn?'var(--on)':'var(--tm)';}
+  const ms=document.getElementById('mobileHeaderStatus');
+  if(ms){ms.textContent=isOn?'● Online':'● Offline';ms.style.color=isOn?'var(--on)':'var(--tm)';}
 }
 
-/* ─── Typing ──────────────────────────────── */
+/* ── Typing ── */
 function handleTyping(){
-  if(!me||!activeUid) return;
+  if(!me||!activeUid)return;
   const k=cid(me.uid,activeUid);
   set(ref(db,`typing/${k}/${me.uid}`),true);
   clearTimeout(typTimer);
   typTimer=setTimeout(()=>set(ref(db,`typing/${k}/${me.uid}`),false),2000);
 }
 
-/* ─── Send Message ────────────────────────── */
-window.sendMsg = async () => {
+/* ── Send ── */
+window.sendMsg=async()=>{
   const inp=document.getElementById('msgIn');
   const text=inp.value.trim();
-  if(!text||!activeUid||!me) return;
+  if(!text||!activeUid||!me)return;
   const k=cid(me.uid,activeUid);
-  inp.value=''; inp.style.height='auto';
+  inp.value='';inp.style.height='auto';
   document.getElementById('sndBtn').disabled=true;
   set(ref(db,`typing/${k}/${me.uid}`),false);
-  await push(ref(db,'messages/'+k),{
-    text, type:'text',
-    senderUid:me.uid,
-    senderName:me.displayName||'User',
-    timestamp:Date.now()
-  });
-  // Write to recipient's inbox so they auto-add us as contact
-  await set(ref(db, `inbox/${activeUid}/${me.uid}`), true);
+  await push(ref(db,'messages/'+k),{text,type:'text',senderUid:me.uid,senderName:me.displayName||'User',timestamp:Date.now()});
+  await set(ref(db,`inbox/${activeUid}/${me.uid}`),true);
   inp.focus();
 };
 
-/* ─── Render Messages ─────────────────────── */
-function renderMsgs(data, otherUid, otherName){
+/* ── Render Messages ── */
+function renderMsgs(data){
   const wrap=document.getElementById('msgsWrap');
-  if(!wrap) return;
-  const atBottom = wrap.scrollHeight-wrap.scrollTop-wrap.clientHeight<60;
-  wrap.innerHTML='<div class="date-div">Percakapan dimulai</div>';
-  if(!data) return;
-
+  if(!wrap)return;
+  const atBot=wrap.scrollHeight-wrap.scrollTop-wrap.clientHeight<80;
+  wrap.innerHTML='<div class="ddiv">Percakapan dimulai</div>';
+  if(!data)return;
   const msgs=Object.values(data).sort((a,b)=>a.timestamp-b.timestamp);
   let lastUid=null;
-
   msgs.forEach(msg=>{
     const isMe=msg.senderUid===me.uid;
     const cont=msg.senderUid===lastUid;
     const side=isMe?'right':'left';
-
     const row=document.createElement('div');
     row.className=`brow ${side}${cont?' cont':''}`;
-
     row.innerHTML=`
       <div class="bav ${cc(msg.senderUid)}">${ini(msg.senderName)}</div>
       <div class="bbody">
-        ${!cont?`<div class="bmeta">
-          <span class="bsender">${esc(msg.senderName)}</span>
-          <span>${fmt(msg.timestamp)}</span>
-        </div>`:''}
+        ${!cont?`<div class="bmeta"><span class="bsndr">${esc(msg.senderName)}</span><span>${fmt(msg.timestamp)}</span></div>`:''}
         <div class="bubble">${esc(msg.text)}</div>
       </div>`;
     wrap.appendChild(row);
     lastUid=msg.senderUid;
   });
-
-  const lastMsg=msgs[msgs.length-1];
-  if(atBottom || (lastMsg&&lastMsg.senderUid===me.uid)){
-    wrap.scrollTop=wrap.scrollHeight;
-  }
+  const last=msgs[msgs.length-1];
+  if(atBot||(last&&last.senderUid===me.uid))wrap.scrollTop=wrap.scrollHeight;
 }
 </script>
 </body>
